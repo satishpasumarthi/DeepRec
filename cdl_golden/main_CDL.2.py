@@ -101,8 +101,8 @@ def make_test_mat_for_rec(R_test, article_titles):
              print('Number of users processed: ' + str(iterations))
 
 
-R_test = read_rating('cf-test-1-users.dat')               
-R = read_rating('cf--new-test-1-users.dat')               
+R_test = read_rating('cf--new-test-1-users.dat')               
+R = read_rating('cf-train-1-users.dat')               
 print('read in data')                                                      
 articles_titles = read_artical_titles('raw-data.csv')
 #print('read in articles')  
@@ -125,11 +125,11 @@ if True:
    model.pretrain(lamda_w=0.001, encoder_noise=0.3, epochs=1)
 
 
-   model_history = model.fineture(R, R, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=1)
+   model_history = model.fineture(R, R_test, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=1)
    #testing_rmse = model.getRMSE(R_test)
 
 
-   reccommendations = model.get_reccommendations(R, 3)
+   reccommendations = model.get_reccommendations(R_test, 3)
    print('Reccommendations: ')
    print(reccommendations)
    print('\n\nTesting RMSE = {}'.format(testing_rmse))
