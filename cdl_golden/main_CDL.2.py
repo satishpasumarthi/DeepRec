@@ -65,7 +65,7 @@ def read_artical_titles(file_path):
            article_titles.append(row[3].strip())
     return article_titles
                       
-def get_test_mat_for_rec(R, R_test, article_titles):
+def get_test_mat_for_rec(R_test, article_titles):
     user_read = {}
     user_train_read = {}
     rating_mat = list()
@@ -77,21 +77,21 @@ def get_test_mat_for_rec(R, R_test, article_titles):
           user_read[user_id] = []
        user_read[user_id].append(item_id)
     print('got here 1')  
-    for data in R.astype(int):
-       user_id = data[0]
-       item_id = data[1]
-       rating = data[2]
-       if user_id not in user_train_read:
-          user_train_read[user_id] = []
-       user_train_read[user_id].append(item_id)
-    print('got here 2')
+    #for data in R.astype(int):
+    #   user_id = data[0]
+    #   item_id = data[1]
+    #   rating = data[2]
+    #   if user_id not in user_train_read:
+    #      user_train_read[user_id] = []
+    #   user_train_read[user_id].append(item_id)
+    #print('got here 2')
     already_done = set()
     iterations = 0 
     for user_id, read_data in user_read.items():
        for article_id in range(16980):
           if article_id in read_data:
               rating_mat.append([user_id, article_id, 1])
-          elif article_id not in user_train_read[user_id]:
+          else:
               rating_mat.append([user_id, article_id, 0])
        iterations += 1
        if iterations % 250 == 0:
@@ -104,7 +104,7 @@ R = read_rating('cf-train-1-users.dat')
 print('read in data')                                                      
 articles_titles = read_artical_titles('raw-data.csv')
 print('read in articles')  
-R_new_test = get_test_mat_for_rec(R, R_test,articles_titles)    
+R_new_test = get_test_mat_for_rec(R_test,articles_titles)    
 print('read in rec test mat.')  
 
 if True:
@@ -120,10 +120,10 @@ if True:
    model = CDL.CollaborativeDeepLearning(X, [input_size,hidden_size,code_size])
 
 
-   model.pretrain(lamda_w=0.001, encoder_noise=0.3, epochs=20)
+   model.pretrain(lamda_w=0.001, encoder_noise=0.3, epochs=1)
 
 
-   model_history = model.fineture(R, R_test, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=50)
+   model_history = model.fineture(R, R_new_test, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=1)
    #testing_rmse = model.getRMSE(R_test)
 
 
