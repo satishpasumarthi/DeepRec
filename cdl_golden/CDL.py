@@ -153,7 +153,7 @@ class CollaborativeDeepLearning:
         # pred_out = self.cdl_model.predict([test_user, test_item, test_item_feat])
         return np.sqrt(np.mean(np.square(test_label.flatten() - pred_out[0].flatten())))
     
-    def get_reccommendations(self, test_mat, user_rec_id):
+    def get_reccommendations(self, test_mat, user_rec_id, m_value):
         test_user, test_item, test_item_feat, test_label = self.matrix2input(test_mat)
         rec_scores = self.cdl_model.predict([test_user, test_item, test_item_feat])[0]
         items_scores = {}
@@ -165,7 +165,7 @@ class CollaborativeDeepLearning:
               items_scores[item_id] = rec_scores[index, 0]
            index += 1
         items_scores = sorted(items_scores.items(), key=lambda pair : (pair[1], pair[0]), reverse=True)
-        return items_scores[:10]
+        return items_scores[:m_value]
            
 
 '''
