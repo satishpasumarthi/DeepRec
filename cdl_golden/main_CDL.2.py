@@ -65,7 +65,7 @@ def read_artical_titles(file_path):
            article_titles.append(row[3].strip())
     return article_titles
                       
-def get_test_mat_for_rec(R_test, article_titles):
+def make_test_mat_for_rec(R_test, article_titles):
     user_read = {}
     user_train_read = {}
     rating_mat = list()
@@ -86,26 +86,28 @@ def get_test_mat_for_rec(R_test, article_titles):
     #   user_train_read[user_id].append(item_id)
     #print('got here 2')
     already_done = set()
-    iterations = 0 
-    for user_id, read_data in user_read.items():
-       for article_id in range(16980):
-          if article_id in read_data:
-              rating_mat.append([user_id, article_id, 1])
-          else:
-              rating_mat.append([user_id, article_id, 0])
-       iterations += 1
-       if iterations % 250 == 0:
-          print('Number of users processed: ' + str(iterations))
-    return np.array(rating_mat).astype('float32')
+    iterations = 0
+    with open('cf--new-test-1-users.dat', 'w') as file: 
+       for user_id, read_data in user_read.items():
+          for article_id in range(16980):
+             if article_id in read_data:
+                output = str(user_id) + ',' + str(article_id) + ',' + '1' + '\n'
+                file.write(output)
+             else:
+                output = str(user_id) + ',' + str(article_id) + ',' + '0' + '\n'
+                file.write(output)
+          iterations += 1
+          if iterations % 250 == 0:
+             print('Number of users processed: ' + str(iterations))
 
 
 R_test = read_rating('cf-test-1-users.dat')               
-R = read_rating('cf-train-1-users.dat')               
+R = read_rating('cf--new-test-1-users.dat')               
 print('read in data')                                                      
 articles_titles = read_artical_titles('raw-data.csv')
-print('read in articles')  
-R_new_test = get_test_mat_for_rec(R_test,articles_titles)    
-print('read in rec test mat.')  
+#print('read in articles')  
+#make_test_mat_for_rec(R_test,articles_titles)    
+#print('read in rec test mat.')  
 
 if True:
 
@@ -123,11 +125,11 @@ if True:
    model.pretrain(lamda_w=0.001, encoder_noise=0.3, epochs=1)
 
 
-   model_history = model.fineture(R, R_new_test, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=1)
+   model_history = model.fineture(R, R, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=1)
    #testing_rmse = model.getRMSE(R_test)
 
 
-   reccommendations = model.get_reccommendations(R_new_test, 3)
+   reccommendations = model.get_reccommendations(R, 3)
    print('Reccommendations: ')
    print(reccommendations)
    print('\n\nTesting RMSE = {}'.format(testing_rmse))
