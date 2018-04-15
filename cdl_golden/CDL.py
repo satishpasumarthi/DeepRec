@@ -165,7 +165,7 @@ class CollaborativeDeepLearning:
               items_scores[item_id] = rec_scores[index, 0]
            index += 1
         items_scores = sorted(items_scores.items(), key=lambda pair : (pair[1], pair[0]), reverse=True)
-        return items_scores
+        return items_scores[:10]
            
 
 '''
