@@ -149,9 +149,24 @@ class CollaborativeDeepLearning:
     def getRMSE(self, test_mat):
         test_user, test_item, test_item_feat, test_label = self.matrix2input(test_mat)
         pred_out = self.cdl_model.predict([test_user, test_item, test_item_feat])
-        print (pred_out[0][0:50], test_label[0:50])
+        #print (pred_out[0][0:50], test_label[0:50])
         # pred_out = self.cdl_model.predict([test_user, test_item, test_item_feat])
         return np.sqrt(np.mean(np.square(test_label.flatten() - pred_out[0].flatten())))
+    
+    def get_reccommendations(self, test_mat, user_rec_id):
+        test_user, test_item, test_item_feat, test_label = self.matrix2input(test_mat)
+        rec_scores = self.cdl_model.predict([test_user, test_item, test_item_feat])[0]
+        items_scores = {}
+        index = 0
+        for data in test_mat.astype(int):
+           user_id = data[0]
+           item_id = data[1]
+           if user_id == user_rec_id:
+              items_scores[item_id] = rec_scores[index, 0]
+           index += 1
+        items_scores = sorted(items_scores.items(), key=lambda pair : (pair[1], pair[0]), reverse=True)
+        return items_scores
+           
 
 '''
 from keras.engine.topology import Layer
