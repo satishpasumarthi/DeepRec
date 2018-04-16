@@ -69,7 +69,7 @@ def read_artical_titles(file_path):
            article_titles.append(row[3].strip())
     return article_titles
                       
-def make_test_mat_for_rec(R_test, article_titles):
+def make_test_mat_for_rec(R, R_test, article_titles):
     user_read = {}
     user_train_read = {}
     rating_mat = list()
@@ -104,8 +104,9 @@ def make_test_mat_for_rec(R_test, article_titles):
           if iterations % 250 == 0:
              print('Number of users processed: ' + str(iterations))
              
-def get_user_rec_pairs(R_test, rec_user_ids):
+def get_user_rec_pairs(R, R_test, rec_user_ids):
     user_read = {}
+    user_train_read = {}
     rating_mat = list()
     for data in R_test.astype(int):
        user_id = data[0]
@@ -115,13 +116,22 @@ def get_user_rec_pairs(R_test, rec_user_ids):
           user_read[user_id] = []
        user_read[user_id].append(item_id)
     print('got here 1')
+    for data in R.astype(int):
+       user_id = data[0]
+       item_id = data[1]
+       rating = data[2]
+       if user_id not in user_train_read:
+          user_train_read[user_id] = []
+       user_train_read[user_id].append(item_id)
+    print('got here 2')
     for rec_user_id in rec_user_ids:
         read_data = user_read[rec_user_id]
+        read_train_data = user_train_read[rec_user_id]
         iterations = 0
         for article_id in range(16980):
            if article_id in read_data:
-               rating_mat.append([rec_user_id, article_id, 1])
-           else:
+              rating_mat.append([rec_user_id, article_id, 1])
+           elif article_id not in read_train_data:
               rating_mat.append([rec_user_id, article_id, 0])
         iterations += 1
         if iterations % 250 == 0:
@@ -130,9 +140,9 @@ def get_user_rec_pairs(R_test, rec_user_ids):
     return np.array(rating_mat).astype('float32'), user_read 
 
 #R_test_rec = read_rating('cf--new-test-1-users.dat', test_data=True, user_to_load=3)
-R_test = read_rating('cf-test-1-users.dat')
-R_test_rec, users_liked = get_user_rec_pairs(R_test, users_to_test)               
-R = read_rating('cf-train-1-users.dat')               
+R_test = read_rating('cf-test-1-users.dat')               
+R = read_rating('cf-train-1-users.dat')
+R_test_rec, users_liked = get_user_rec_pairs(R, R_test, users_to_test)           
 print('read in data')                                                      
 articles_titles = read_artical_titles('raw-data.csv')
 #print('read in articles')  
