@@ -8,7 +8,7 @@ import CDL
 doc_vocab_file_path = 'mult.dat'
 user_item_train_file_path = 'cf-train-1-users.dat'
 user_item_test_file_path = 'cf-test-1-users.dat'
-user_to_test = 1
+users_to_test = [10, 20, 30]
 m_value = 10
 # processing doc vocab file and creating X matrix
 
@@ -104,7 +104,7 @@ def make_test_mat_for_rec(R_test, article_titles):
           if iterations % 250 == 0:
              print('Number of users processed: ' + str(iterations))
              
-def get_user_rec_pairs(R_test, rec_user_id):
+def get_user_rec_pairs(R_test, rec_user_ids):
     user_read = {}
     rating_mat = list()
     for data in R_test.astype(int):
@@ -115,22 +115,23 @@ def get_user_rec_pairs(R_test, rec_user_id):
           user_read[user_id] = []
        user_read[user_id].append(item_id)
     print('got here 1')
-    read_data = user_read[rec_user_id]
-    iterations = 0
-    for article_id in range(16980):
-        if article_id in read_data:
-           rating_mat.append([rec_user_id, article_id, 1])
-        else:
-           rating_mat.append([rec_user_id, article_id, 1])
-    iterations += 1
-    if iterations % 250 == 0:
-        print('Number of users processed: ' + str(iterations))
+    for rec_user_id in rec_user_ids:
+        read_data = user_read[rec_user_id]
+        iterations = 0
+        for article_id in range(16980):
+           if article_id in read_data:
+               rating_mat.append([rec_user_id, article_id, 1])
+           else:
+              rating_mat.append([rec_user_id, article_id, 0])
+        iterations += 1
+        if iterations % 250 == 0:
+           print('Number of users processed: ' + str(iterations))
     
     return np.array(rating_mat).astype('float32'), read_data 
 
 #R_test_rec = read_rating('cf--new-test-1-users.dat', test_data=True, user_to_load=3)
 R_test = read_rating('cf-test-1-users.dat')
-R_test_rec, user_liked = get_user_rec_pairs(R_test, user_to_test)               
+R_test_rec, user_liked = get_user_rec_pairs(R_test, users_to_test)               
 R = read_rating('cf-train-1-users.dat')               
 print('read in data')                                                      
 articles_titles = read_artical_titles('raw-data.csv')
@@ -157,17 +158,7 @@ if True:
    model_history = model.fineture(R[:44408], R[44408:55510], lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=1)
    #testing_rmse = model.getRMSE(R_test)
 
-
-   reccommendations = model.get_reccommendations(R_test_rec, user_to_test, m_value)
-   print('Reccommendations: ')
-   print(reccommendations)
-   
-   total_matched = 0
-   for ( article_id, _ ) in reccommendations:
-       if int(article_id) in user_liked:
-          total_matched += 1
-   print('\n\nTotal aricles user liked: ' + str(len(user_liked)))
-   print('\n\nTotal aricles matched with real likes: ' + str(total_matched))
-   print('\n\nRecall Value: ' + str(total_matched/len(user_liked)))
-   #print('\n\nTesting RMSE = {}'.format(testing_rmse))
+   for user_to_test in users_to_test:
+      reccommendations = model.get_reccommendations(R_test_rec, user_to_test, m_value)
+      model.print_recall(reccommendations, user_liked, user_to_test)
 

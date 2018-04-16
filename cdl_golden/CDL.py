@@ -166,6 +166,17 @@ class CollaborativeDeepLearning:
            index += 1
         items_scores = sorted(items_scores.items(), key=lambda pair : (pair[1], pair[0]), reverse=True)
         return items_scores[:m_value]
+
+    def print_recall(self, reccommendations, user_liked, user_rec_id):
+         print('Reccommendations for user '+ str(user_rec_id) + ' :')
+         #print(reccommendations)
+         total_matched = 0
+         for ( article_id, _ ) in reccommendations:
+             if int(article_id) in user_liked:
+                 total_matched += 1
+         print('\n\nTotal aricles user liked: ' + str(len(user_liked)))
+         print('\n\nTotal aricles matched with real likes: ' + str(total_matched))
+         print('\n\nRecall Value: ' + str(total_matched/len(user_liked)))
            
 
 '''
