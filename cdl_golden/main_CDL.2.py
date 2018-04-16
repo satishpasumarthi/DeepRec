@@ -127,11 +127,11 @@ def get_user_rec_pairs(R_test, rec_user_ids):
         if iterations % 250 == 0:
            print('Number of users processed: ' + str(iterations))
     
-    return np.array(rating_mat).astype('float32'), read_data 
+    return np.array(rating_mat).astype('float32'), user_read 
 
 #R_test_rec = read_rating('cf--new-test-1-users.dat', test_data=True, user_to_load=3)
 R_test = read_rating('cf-test-1-users.dat')
-R_test_rec, user_liked = get_user_rec_pairs(R_test, users_to_test)               
+R_test_rec, users_liked = get_user_rec_pairs(R_test, users_to_test)               
 R = read_rating('cf-train-1-users.dat')               
 print('read in data')                                                      
 articles_titles = read_artical_titles('raw-data.csv')
@@ -160,5 +160,5 @@ if True:
 
    for user_to_test in users_to_test:
       reccommendations = model.get_reccommendations(R_test_rec, user_to_test, m_value)
-      model.print_recall(reccommendations, user_liked, user_to_test)
+      model.print_recall(reccommendations, users_liked[user_to_test], user_to_test)
 
