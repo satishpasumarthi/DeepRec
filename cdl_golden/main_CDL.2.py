@@ -2,16 +2,17 @@
 import numpy as np
 import time
 import CDL
-
+import tensorflow as tf
+import numpy as np
 
 # All parameters
 doc_vocab_file_path = 'mult.dat'
 user_item_train_file_path = 'cf-train-1-users.dat'
 user_item_test_file_path = 'cf-test-1-users.dat'
 users_to_test = [1]
-m_value = 300
-epochs_AE = 20
-epochs_main = 50
+m_value = 50
+epochs_AE = 1
+epochs_main = 1
 
 # processing doc vocab file and creating X matrix
 
@@ -163,7 +164,10 @@ if True:
 
    model.pretrain(lamda_w=0.001, encoder_noise=0.3, epochs=epochs_AE)
 
-   model_history = model.fineture(R, R, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=epochs_main)
+   wts = model.finetune(R, R, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=epochs_main)
+   AA = np.dot(wts[3],np.transpose(wts[2]))
+   print(AA)
+   print(AA.shape)
    #testing_rmse = model.getRMSE(R_test)
    sum_recall = 0
    for user_to_test in users_to_test:
