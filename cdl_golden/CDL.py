@@ -55,11 +55,11 @@ class CollaborativeDeepLearning:
             self.trained_decoders.append(ae_decoder)
             X_train = ae_encoder.predict(X_train)
 
-    def fineture(self, train_mat, test_mat, lamda_u=0.1, lamda_v=0.1, lamda_n=0.1, lr=0.001, batch_size=64, epochs=10):
+    def finetune(self, train_mat, test_mat, lamda_u=0.1, lamda_v=0.1, lamda_n=0.1, lr=0.001, batch_size=64, epochs=10):
         '''
         Fine-tuning with rating prediction
         '''
-        num_user = int( max(train_mat[:,0].max(), test_mat[:,0].max()) + 1 )
+        num_user = int( max(train_mat[:,0].max(), test_mat[:,0].max()) )
         num_item = int( max(train_mat[:,1].max(), test_mat[:,1].max()) + 1 )
 
         # item autoencoder 
@@ -71,12 +71,16 @@ class CollaborativeDeepLearning:
 
         # user embedding
         user_InputLayer = Input(shape=(1,), dtype='int32', name='user_input')
+        #user_InputLayer = Input( dtype='int32', name='user_input')
         user_EmbeddingLayer = Embedding(input_dim=num_user, output_dim=self.embedding_dim, input_length=1, name='user_embedding', embeddings_regularizer=l2(lamda_u), embeddings_initializer=RandomNormal(mean=0, stddev=1))(user_InputLayer)
+        #user_EmbeddingLayer = Embedding(input_dim=num_user, output_dim=self.embedding_dim, input_length=1, name='user_embedding', embeddings_regularizer=l2(lamda_u), embeddings_initializer=RandomNormal(mean=0, stddev=1))
         user_EmbeddingLayer = Flatten(name='user_flatten')(user_EmbeddingLayer)
 
         # item embedding
         item_InputLayer = Input(shape=(1,), dtype='int32', name='item_input')
+        #item_InputLayer = Input( dtype='int32', name='item_input')
         item_OffsetVector = Embedding(input_dim=num_item, output_dim=self.embedding_dim, input_length=1, name='item_offset_vector', embeddings_regularizer=l2(lamda_v), embeddings_initializer=RandomNormal(mean=0, stddev=1))(item_InputLayer)
+        #item_OffsetVector = Embedding(input_dim=num_item, output_dim=self.embedding_dim, input_length=1, name='item_offset_vector', embeddings_regularizer=l2(lamda_v), embeddings_initializer=RandomNormal(mean=0, stddev=1))
         item_OffsetVector = Flatten(name='item_flatten')(item_OffsetVector)
         item_EmbeddingLayer = Add()([encoded, item_OffsetVector]) 
         
@@ -92,7 +96,7 @@ class CollaborativeDeepLearning:
 
         #model_history = self.cdl_model.fit([train_user, train_item, train_item_feat], [train_label, train_item_feat], epochs=epochs, batch_size=batch_size, validation_data=([test_user, test_item, test_item_feat], [test_label, test_item_feat]))
         model_history = self.cdl_model.fit([train_user, train_item, train_item_feat], [train_label, train_item_feat], epochs=epochs, batch_size=batch_size, validation_split = 0.2)
-        return model_history
+        return self.cdl_model.get_weights()
 
         # v and theta
         '''
