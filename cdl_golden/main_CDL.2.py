@@ -10,9 +10,9 @@ doc_vocab_file_path = 'mult.dat'
 user_item_train_file_path = 'cf-train-1-users.dat'
 user_item_test_file_path = 'cf-test-1-users.dat'
 users_to_test = [1]
-m_value = 50
-epochs_AE = 1
-epochs_main = 1
+m_value = 300
+epochs_AE = 15
+epochs_main = 15
 
 # processing doc vocab file and creating X matrix
 
@@ -171,7 +171,7 @@ if True:
    #testing_rmse = model.getRMSE(R_test)
    sum_recall = 0
    for user_to_test in users_to_test:
-      reccommendations = model.get_reccommendations(R_test_rec, user_to_test, m_value)
+      reccommendations = model.get_reccommendations(R_test_rec, user_to_test, m_value, AA)
       recall = model.print_recall(reccommendations, users_liked[user_to_test], user_to_test)
       sum_recall += recall	
    recall_at_m = sum_recall/len(users_to_test)

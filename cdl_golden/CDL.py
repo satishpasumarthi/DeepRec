@@ -59,7 +59,7 @@ class CollaborativeDeepLearning:
         '''
         Fine-tuning with rating prediction
         '''
-        num_user = int( max(train_mat[:,0].max(), test_mat[:,0].max()) )
+        num_user = int( max(train_mat[:,0].max(), test_mat[:,0].max()) +1 )
         num_item = int( max(train_mat[:,1].max(), test_mat[:,1].max()) + 1 )
 
         # item autoencoder 
@@ -158,17 +158,23 @@ class CollaborativeDeepLearning:
         # pred_out = self.cdl_model.predict([test_user, test_item, test_item_feat])
         return np.sqrt(np.mean(np.square(test_label.flatten() - pred_out[0].flatten())))
     
-    def get_reccommendations(self, test_mat, user_rec_id, m_value):
-        test_user, test_item, test_item_feat, test_label = self.matrix2input(test_mat)
-        rec_scores = self.cdl_model.predict([test_user, test_item, test_item_feat])[0]
+    def get_reccommendations(self, test_mat, user_rec_id, m_value, AA):
+        #test_user, test_item, test_item_feat, test_label = self.matrix2input(test_mat)
+        #rec_scores = self.cdl_model.predict([test_user, test_item, test_item_feat])[0]
+        #items_scores = {}
+        #index = 0
+        #for data in test_mat.astype(int):
+        #   user_id = data[0]
+        #   item_id = data[1]
+        #   if user_id == user_rec_id:
+        #      items_scores[item_id] = rec_scores[index, 0]
+        #   index += 1
+        item_list_scores = AA[user_rec_id]
         items_scores = {}
-        index = 0
-        for data in test_mat.astype(int):
-           user_id = data[0]
-           item_id = data[1]
-           if user_id == user_rec_id:
-              items_scores[item_id] = rec_scores[index, 0]
-           index += 1
+        #index = 0
+        for index,score in enumerate(item_list_scores):
+            items_scores[index] = score
+
         items_scores = sorted(items_scores.items(), key=lambda pair : (pair[1], pair[0]), reverse=True)
         return items_scores[:m_value]
 
