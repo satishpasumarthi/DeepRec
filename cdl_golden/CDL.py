@@ -90,7 +90,8 @@ class CollaborativeDeepLearning:
         train_user, train_item, train_item_feat, train_label = self.matrix2input(train_mat)
         test_user, test_item, test_item_feat, test_label = self.matrix2input(test_mat)
 
-        model_history = self.cdl_model.fit([train_user, train_item, train_item_feat], [train_label, train_item_feat], epochs=epochs, batch_size=batch_size, validation_data=([test_user, test_item, test_item_feat], [test_label, test_item_feat]))
+        #model_history = self.cdl_model.fit([train_user, train_item, train_item_feat], [train_label, train_item_feat], epochs=epochs, batch_size=batch_size, validation_data=([test_user, test_item, test_item_feat], [test_label, test_item_feat]))
+        model_history = self.cdl_model.fit([train_user, train_item, train_item_feat], [train_label, train_item_feat], epochs=epochs, batch_size=batch_size, validation_split = 0.2)
         return model_history
 
         # v and theta
@@ -177,6 +178,7 @@ class CollaborativeDeepLearning:
          print('\n\nTotal aricles user liked: ' + str(len(user_liked)))
          print('\n\nTotal aricles matched with real likes: ' + str(total_matched))
          print('\n\nRecall Value: ' + str(total_matched/len(user_liked)))
+         return total_matched/len(user_liked)
            
 
 '''
