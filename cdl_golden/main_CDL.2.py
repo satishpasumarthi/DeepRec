@@ -8,8 +8,11 @@ import CDL
 doc_vocab_file_path = 'mult.dat'
 user_item_train_file_path = 'cf-train-1-users.dat'
 user_item_test_file_path = 'cf-test-1-users.dat'
-users_to_test = [10, 20, 30]
-m_value = 10
+users_to_test = [1]
+m_value = 300
+epochs_AE = 20
+epochs_main = 50
+
 # processing doc vocab file and creating X matrix
 
 
@@ -47,21 +50,18 @@ import numpy as np
 import csv                                        
 #from pandas import read_csv                              
                                                           
-def read_rating(file_path, has_header=False, test_data=False, user_to_load=None):             
+def read_rating(file_path, has_header=False):             
     rating_mat = list()                                   
     with open(file_path) as fp:                           
         if has_header is True:                            
             fp.readline()                                 
         for line in fp:                                   
-            line = line.split(',')                        
+            line = line.strip().split(',')                        
             user, item, rating = line[0], line[1], line[2]
-            if not test_data:
-                rating_mat.append( [user, item, rating] )
-            elif test_data and str(user_to_load) == user:
-                rating_mat.append( [user, item, rating] )
+            rating_mat.append( [user, item, rating] )
     return np.array(rating_mat).astype('float32')
 
-def read_artical_titles(file_path):
+def read_article_titles(file_path):
     article_titles = []
     with open(file_path, 'r', encoding='cp850') as file:
        reader = csv.reader(file, delimiter=',')
@@ -144,7 +144,7 @@ R_test = read_rating('cf-test-1-users.dat')
 R = read_rating('cf-train-1-users.dat')
 R_test_rec, users_liked = get_user_rec_pairs(R, R_test, users_to_test)           
 print('read in data')                                                      
-articles_titles = read_artical_titles('raw-data.csv')
+#articles_titles = read_artical_titles('raw-data.csv')
 #print('read in articles')  
 #make_test_mat_for_rec(R_test,articles_titles)    
 #print('read in rec test mat.')  
@@ -161,14 +161,15 @@ if True:
 
    model = CDL.CollaborativeDeepLearning(X, [input_size,hidden_size,code_size])
 
+   model.pretrain(lamda_w=0.001, encoder_noise=0.3, epochs=epochs_AE)
 
-   model.pretrain(lamda_w=0.001, encoder_noise=0.3, epochs=1)
-
-
-   model_history = model.fineture(R[:44408], R[44408:55510], lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=1)
+   model_history = model.fineture(R, R, lamda_u=0.01, lamda_v=0.1, lamda_n=0.1, lr=0.01, epochs=epochs_main)
    #testing_rmse = model.getRMSE(R_test)
-
+   sum_recall = 0
    for user_to_test in users_to_test:
       reccommendations = model.get_reccommendations(R_test_rec, user_to_test, m_value)
-      model.print_recall(reccommendations, users_liked[user_to_test], user_to_test)
+      recall = model.print_recall(reccommendations, users_liked[user_to_test], user_to_test)
+      sum_recall += recall	
+   recall_at_m = sum_recall/len(users_to_test)
+   print("Recall@"+str(m_value)+":"+str(recall_at_m))
 
