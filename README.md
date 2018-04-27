@@ -16,9 +16,9 @@ sys <br>
 
 Directory Structure:
 ====================
-data - contains all the necessary input data files. Each dataset directory has a separate readme file describing each file 
-results - directory where we saved our recall values and also various comparision plots
-experiments - contains files related to all the experiments we did
+data - contains all the necessary input data files. Each dataset directory has a separate readme file describing each file <br>
+results - directory where we saved our recall values and also various comparision plots <br>
+experiments - contains files related to all the experiments we did <br>
 
 src code: <br>
 =======
@@ -58,5 +58,5 @@ For citeulike-a dataset (d=a) , with dense setting (P=10) and two encoder layers
 python cdl.py -p 10 -l 2 -d a <br>
 
 Case 2: <br>
-For citeulike-t dataset (d=t) , with dense setting (P=3) and two encoder layers in SDAE(l=2) 
+For citeulike-t dataset (d=t) , with dense setting (P=3) and two encoder layers in SDAE(l=2) <br>
 python cdl.py -p 3 -l 2 -d t
