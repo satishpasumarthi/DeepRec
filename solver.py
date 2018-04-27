@@ -119,7 +119,7 @@ class Solver(object):
             last_batch_handle='pad')
         data_iter.reset()
         #for i in range(begin_iter, end_iter):
-        for i in range(0, 100):
+        for i in range(0, 2):
             if self.iter_start_callback is not None:
                 if self.iter_start_callback(i):
                     return

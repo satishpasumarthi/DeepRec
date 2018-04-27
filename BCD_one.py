@@ -18,7 +18,7 @@ def BCD_one(R, U, V, theta, lambda_u, lambda_v, dir_save='.',
     I_v = np.mat(np.eye(K)*lambda_v)
     C  = np.mat(np.ones(R.shape))*b
     C[np.where(R>0)] = a
-    #print 'I: %d, J: %d, K: %d' % (num_u,num_v,K)
+    print 'I: %d, J: %d, K: %d' % (num_u,num_v,K)
     for it in range(num_iter):
         U_sq = U*U.T*b
         for j in range(num_v):

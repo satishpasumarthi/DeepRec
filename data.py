@@ -1,20 +1,19 @@
 import numpy as np
 import os
 from mult import read_mult
-
+import sys
 
 def downloadData():
     data_url = 'https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/cdl'
-    for filename in ('mult.dat', 'cf-train-1-users.dat', 'cf-test-1-users.dat', 'raw-data.csv'):
+    for filename in ('mult.dat', 'train_P10_1.dat', 'test_P10_1.dat', 'raw-data.csv'):
         if not os.path.exists(filename):
             os.system("wget %s/%s" % (data_url, filename))
 
-
-
-def get_mult():
-    if not os.path.exists('mult.dat'):
-        downloadData()
-    X = read_mult('mult.dat',8000).astype(np.float32)
+def get_mult(mult_file,vocab_size,ndocs):
+    if not os.path.exists(mult_file):
+        print "data.py:: get_mult File does not exist."
+        sys.exit(2)
+    X = read_mult(mult_file,vocab_size,ndocs).astype(np.float32)
     return X
 
 def get_dummy_mult():
@@ -22,9 +21,11 @@ def get_dummy_mult():
     X[X<0.9] = 0
     return X
 
-def read_user(f_in='data/cf-train-1-users.dat',num_u=5551,num_v=16980):
-    if not os.path.exists('data/cf-train-1-users.dat'):
-        downloadData()
+def read_user(f_in='data/citeulike-a/P10/train_P10_1.dat',num_u=5551,num_v=16980):
+    if not os.path.exists(f_in):
+        #downloadData()
+        print("datapy:: read_user File Not present")
+        sys.exit(2)
     fp = open(f_in)
     R = np.mat(np.zeros((num_u,num_v)))
     for i,line in enumerate(fp):

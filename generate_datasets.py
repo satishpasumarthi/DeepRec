@@ -3,10 +3,10 @@ import csv
 
 
 # divides users.dat into training and test set. P denotes the number of articles used for test set. P=1 sparse setting. P =10 dense setting. Default is dense setting
-def create_training_test_sets(P=5,n=5551):
+def create_training_test_sets(P=10,n=5551):
     train = [[] for _dummy in xrange(n)]
     test = [[] for _dummy in xrange(n)]
-    fp= open("users.dat")
+    fp= open("data/citeulike-a/raw_inputs/users.dat")
     users = fp.readlines()
     num_users = len(users)
     for user_id in range(num_users):
@@ -32,18 +32,18 @@ def create_training_test_sets(P=5,n=5551):
 
 
 def generate_datasets(num_samples,num_sets=1,setting="dense",):
+    #manually change settings for citeulike-t dataset
     if setting == "dense":
         P = 10
     else:
         P = 1
     random.seed(1234)
-    P =5
     for i in range(num_sets):
 
 
         train,test = create_training_test_sets(P,num_samples )
-        trainFile = "data/train_P"+str(P)+"_"+str(i+1)+".dat"
-        testFile = "data/test_P"+str(P)+"_"+str(i+1)+".dat"
+        trainFile = "data/citeulike-a/train_P"+str(P)+"_"+str(i+1)+".dat"
+        testFile = "data/citeulike-a/test_P"+str(P)+"_"+str(i+1)+".dat"
 
         with open(trainFile, "wb") as f:
             writer = csv.writer(f, delimiter=' ')
