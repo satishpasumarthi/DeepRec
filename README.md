@@ -51,7 +51,7 @@ cdl.py : Main Collaborative Deep Learning (CDL) wrapper file <br>
 model.py: Feature extraction and preparing data for SDAE <br>
 solver.py: Finutune and parameter update <br>
 
-Run
+Run:
 ---
 Case 1: <br>
 For citeulike-a dataset (d=a) , with dense setting (P=10) and two encoder layers in SDAE(l=2) <br>
