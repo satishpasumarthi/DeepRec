@@ -16,7 +16,7 @@ sys <br>
 
 Directory Structure:
 ====================
-data - contains all the necessary input data files. Each dataset directory has a separate readme file describing each file <br>
+data - contains all the necessary input data files. Each dataset directory has separate readme file describing each file <br>
 results - directory where we saved our recall values and also various comparision plots <br>
 experiments - contains files related to all the experiments we did <br>
 
@@ -32,16 +32,16 @@ Evaluation
 -----------
 evaluate_CDL.py: To calculate recall values <br>
 #To calculate recall for citeulike-a(d=a) with dense setting(p=10) and number of encoder layers(l=2)<br>
-python evaluate_CDL.py -p 10 -l 2 -d a <br>
+**python evaluate_CDL.py -p 10 -l 2 -d a** <br>
 
 cal_precision.py : To calculate mean Average Precision mAP <br>
 #To calculate mAP for citeulike-a(d=a) with dense setting(p=10) and number of encoder layers(l=2)<br>
 #c defines where to cut off the recommended articles <br>
-python cal_precision.py -p 10 -l 2 -d a -c 250 <br>
+**python cal_precision.py -p 10 -l 2 -d a -c 250** <br>
 
 show_recommendation.py : To show the recommendations for a particular user<br>
 #To display recommendations for userid 8 (u=8) citeulike-a(d=a) with dense setting(p=10) and number of encoder layers(l=2)<br>
-python show_recommendation.py -p 10 -l 2 -d a -u 8<br>
+**python show_recommendation.py -p 10 -l 2 -d a -u 8** <br>
 
 Main Model
 ----------
@@ -55,11 +55,11 @@ Run:
 ---
 Case 1: <br>
 For citeulike-a dataset (d=a) , with dense setting (P=10) and two encoder layers in SDAE(l=2) <br>
-python cdl.py -p 10 -l 2 -d a <br>
+**python cdl.py -p 10 -l 2 -d a** <br>
 
 Case 2: <br>
 For citeulike-t dataset (d=t) , with dense setting (P=3) and two encoder layers in SDAE(l=2) <br>
-python cdl.py -p 3 -l 2 -d t
+**python cdl.py -p 3 -l 2 -d t** <br>
 
 Directory Tree: (output of 'tree -L 3')
 -------------------
