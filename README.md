@@ -116,3 +116,8 @@ Directory Tree: (output of 'tree -L 3')
 ├── show_recommendation.py
 └── solver.py
 ```
+Git references:
+==============
+- https://github.com/js05212/CDL
+- https://github.com/akash13singh/mxnet-for-cdl
+- https://github.com/zoujun123/Keras-CDL
