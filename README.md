@@ -37,7 +37,7 @@ python evaluate_CDL.py -p 10 -l 2 -d a <br>
 cal_precision.py : To calculate mean Average Precision mAP <br>
 #To calculate mAP for citeulike-a(d=a) with dense setting(p=10) and number of encoder layers(l=2)<br>
 #c defines where to cut off the recommended articles <br>
-python evaluate_CDL.py -p 10 -l 2 -d a -c 250 <br>
+python cal_precision.py -p 10 -l 2 -d a -c 250 <br>
 
 show_recommendation.py : To show the recommendations for a particular user<br>
 #To display recommendations for userid 8 (u=8) citeulike-a(d=a) with dense setting(p=10) and number of encoder layers(l=2)<br>
@@ -61,7 +61,7 @@ Case 2: <br>
 For citeulike-t dataset (d=t) , with dense setting (P=3) and two encoder layers in SDAE(l=2) <br>
 python cdl.py -p 3 -l 2 -d t
 
-Directory Structure:
+Directory Tree:
 -------------------
 ```bash
 ├── autoencoder.py
