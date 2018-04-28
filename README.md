@@ -63,7 +63,7 @@ python cdl.py -p 3 -l 2 -d t
 
 Directory Structure:
 -------------------
-
+```bash
 ├── autoencoder.py
 ├── autoencoder.pyc
 ├── BCD_one.py
@@ -225,3 +225,4 @@ Directory Structure:
 ├── show_recommendation.py
 ├── solver.py
 └── solver.pyc
+```
