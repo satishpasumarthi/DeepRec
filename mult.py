@@ -22,6 +22,7 @@ def read_mult(f_in='data/mult.dat',D=8000,ndocs=16980):
     X = X*Y
     #Normalize
     arr_max = np.amax(X,axis=1)
+    np.place(arr_max, arr_max==0, [1])
     X = (X.T/arr_max).T
     return X
 
